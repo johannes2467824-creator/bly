@@ -1,54 +1,40 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#061f24">
-  <title>BLY</title>
-  <style>
-    :root { color-scheme: dark; --bg:#061f24; --white:#fff; }
-    * { box-sizing:border-box; }
-    html,body { margin:0; width:100%; min-height:100%; }
-    body { background:var(--bg); color:var(--white); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
-    .app { position:relative; min-height:100vh; min-height:100dvh; display:flex; align-items:center; justify-content:center; padding:env(safe-area-inset-top) 18px calc(115px + env(safe-area-inset-bottom)); }
-    .brand { font-size:clamp(86px,24vw,155px); font-weight:850; font-style:italic; letter-spacing:-.095em; line-height:1; transform:translateX(-.045em); user-select:none; }
-    .nav { position:absolute; bottom:calc(34px + env(safe-area-inset-bottom)); left:0; width:100%; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); align-items:end; gap:4px; padding:0 12px; }
-    .nav button { appearance:none; border:0; background:transparent; color:white; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:12px; min-height:88px; font:inherit; font-size:clamp(14px,4vw,18px); cursor:pointer; padding:8px 2px; }
-    .nav svg { width:38px; height:38px; stroke:currentColor; fill:none; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round; }
-    .nav button:focus-visible { outline:2px solid white; outline-offset:3px; border-radius:8px; }
-    .nav button:active { opacity:.65; }
-    .notice { position:absolute; left:20px; right:20px; bottom:calc(150px + env(safe-area-inset-bottom)); text-align:center; font-size:14px; opacity:0; pointer-events:none; transition:opacity .2s; }
-    .notice.show { opacity:1; }
-    @media (max-height:560px) { .brand {font-size:72px;} .nav {bottom:calc(8px + env(safe-area-inset-bottom));} .nav button {min-height:65px;gap:4px;} }
-  </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#092127"><title>BLY – Demo</title>
+<style>
+:root{--bg:#092127;--ink:#092127}*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:white}button{font:inherit;cursor:pointer}button:focus-visible{outline:3px solid #56d8d4;outline-offset:4px}
+.home{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:24px 18px 130px}.home-logo{font-size:clamp(100px,31vw,180px);font-weight:900;font-style:italic;letter-spacing:-.13em;line-height:.8;padding-right:.14em}.home-name{font-size:clamp(38px,10vw,58px);font-weight:800;font-style:italic;letter-spacing:-.05em;margin-top:12px}.nav{position:absolute;bottom:max(40px,env(safe-area-inset-bottom));left:0;right:0;display:flex;justify-content:space-around;align-items:flex-end;gap:8px;padding:0 20px}.nav button{width:33.33%;border:0;background:none;color:white;display:flex;align-items:center;flex-direction:column;gap:10px;font-size:clamp(13px,3.9vw,18px);white-space:nowrap}.nav svg{width:37px;height:37px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.overlay{position:fixed;inset:0;background:linear-gradient(115deg,#1a3c4d 0%,#1b4650 40%,#59b987 100%);z-index:10;overflow-y:auto;display:none}.overlay.open{display:block}.id-layout{width:min(100%,470px);min-height:100svh;margin:auto;padding:clamp(54px,11svh,100px) 14px 32px;display:flex;flex-direction:column;align-items:center}.identity{position:relative;width:100%;height:clamp(610px,73svh,780px);min-height:610px;background:#fff;border-radius:18px;overflow:hidden;color:var(--ink);box-shadow:0 8px 22px #0001;isolation:isolate}.lines{position:absolute;inset:0;width:100%;height:100%;z-index:-1;opacity:.85}.id-top{height:120px;display:flex;align-items:flex-start;justify-content:space-between;padding:18px 22px}.close,.dots{background:none;border:0;color:var(--ink);font-size:38px;font-weight:300;line-height:1}.dots{font-size:32px}.brand{text-align:center;font-weight:900;font-style:italic;line-height:1;margin-top:8px}.brand-symbol{font-size:50px;letter-spacing:-.1em}.brand-word{font-size:17px}.demo-stamp{position:absolute;top:132px;left:50%;transform:translateX(-50%);background:#092127;color:#fff;border-radius:99px;padding:6px 13px;font-size:11px;font-weight:800;letter-spacing:.15em;white-space:nowrap}.person{position:absolute;top:22%;left:50%;transform:translateX(-50%);width:min(65%,280px);text-align:center}.portrait{width:100%;aspect-ratio:1/1.38;object-fit:cover;display:block;background:#dce6e5;border-radius:3px}.age{position:absolute;right:-32px;bottom:2px;background:#fff;border-radius:8px 0 0 0;padding:6px 2px 0 14px;font-size:clamp(48px,11vw,72px);font-weight:500;line-height:1}.details{position:absolute;top:73%;width:100%;text-align:center;padding:0 10px}.person-name{font-size:clamp(32px,8vw,48px);font-weight:600;letter-spacing:-.035em}.number{font-size:clamp(23px,6vw,32px);color:#777;margin-top:3px}.fake-banner{display:inline-block;background:#fff0df;color:#111;padding:14px 18px;font-weight:700;font-size:clamp(16px,4.4vw,21px);margin-top:38px}.qr-wrap{position:relative;margin-top:-86px;z-index:2;display:flex;flex-direction:column;align-items:center}.qr-panel{background:#fff;padding:20px;box-shadow:0 8px 8px #0002;width:clamp(205px,58vw,255px);aspect-ratio:1}.qr-panel svg{display:block;width:100%;height:100%}.qr-label{font-size:11px;font-weight:900;letter-spacing:.15em;fill:#092127}.caption{text-align:center;color:#fff;margin-top:16px;font-size:15px;line-height:1.3}.footnote{font-size:12px;opacity:.75;margin-top:12px;text-align:center}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#fff;color:#092127;padding:12px 18px;border-radius:12px;display:none;z-index:20;white-space:nowrap;box-shadow:0 8px 20px #0003}@media(max-height:720px){.id-layout{padding-top:32px}.identity{height:650px}.details{top:72%}}@media(min-width:650px){.id-layout{padding-top:40px}.identity{height:760px}.qr-wrap{margin-top:-80px}}
+</style>
 </head>
 <body>
-  <main class="app">
-    <div class="brand" aria-label="BLY">BLY</div>
-    <p id="notice" class="notice" role="status" aria-live="polite"></p>
-    <nav class="nav" aria-label="Huvudmeny">
-      <button type="button" data-name="BLY" aria-label="BLY">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="9" y="3" width="22" height="34" rx="2"/><circle cx="20" cy="14" r="4" fill="currentColor" stroke="none"/><path d="M13 24c0-5 14-5 14 0M15 31h10"/></svg>
-        <span>BLY</span>
-      </button>
-      <button type="button" data-name="Skanna QR-kod">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M3 14V3h11M26 3h11v11M37 26v11H26M14 37H3V26"/><rect x="10" y="10" width="7" height="7"/><rect x="23" y="10" width="7" height="7"/><rect x="10" y="23" width="7" height="7"/><path d="M23 23h4v4h-4zM30 23v7h-7"/></svg>
-        <span>Skanna QR-kod</span>
-      </button>
-      <button type="button" data-name="Meny">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M5 10h30M5 20h30M5 30h30" stroke-width="3.5"/></svg>
-        <span>Meny</span>
-      </button>
-    </nav>
-  </main>
-  <script>
-    const notice = document.getElementById('notice');
-    document.querySelectorAll('.nav button').forEach(button => {
-      button.addEventListener('click', () => {
-        notice.textContent = `${button.dataset.name} – kommer snart`;
-        notice.classList.add('show');
-      });
-    });
-  </script>
-</body>
-</html>
+<main class="home" id="home"><div class="home-logo" aria-hidden="true">B</div><div class="home-name">BLY</div>
+<nav class="nav" aria-label="Huvudmeny">
+<button id="openId" aria-label="Visa BLY"><svg viewBox="0 0 32 32"><rect x="5" y="2" width="22" height="28" rx="1"/><circle cx="16" cy="11" r="3" fill="currentColor" stroke="none"/><path d="M10 20c0-6 12-6 12 0M11 25h10"/></svg><span>BLY</span></button>
+<button id="scan"><svg viewBox="0 0 32 32"><path d="M3 11V3h8M21 3h8v8M29 21v8h-8M11 29H3v-8"/><path d="M11 11h4v4h-4zM19 11h3v3h-3zM11 19h3v3h-3zM18 19h4v4h-4zM24 17h3M16 25v2M25 25v2"/></svg><span>Skanna QR-kod</span></button>
+<button id="menu"><svg viewBox="0 0 32 32"><path d="M3 7h26M3 16h26M3 25h26"/></svg><span>Meny</span></button>
+</nav></main>
+<section class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="bank-id">
+<div class="id-layout"><article class="identity">
+<svg class="lines" viewBox="0 0 420 760" preserveAspectRatio="none" aria-hidden="true"><defs><pattern id="waves" width="420" height="760" patternUnits="userSpaceOnUse"><path d="M-160 580 C-110 60 120 20 560 230 M-200 670 C-100 160 170 50 590 330 M-100 800 C0 330 250 170 530 500" fill="none" stroke="#b4c9d0" stroke-width="1"/></pattern></defs><rect width="420" height="760" fill="url(#waves)"/><g fill="none" stroke="#cadbe0" stroke-width="1" opacity=".65" id="curveGroup"></g></svg>
+<header class="id-top"><button class="close" id="closeId" aria-label="Stäng">×</button><div class="brand"><div class="brand-symbol">B</div><div class="brand-word">BLY</div></div><button class="dots" id="more" aria-label="Fler alternativ">⋮</button></header>
+<div class="demo-stamp">Bank-id</div>
+<div class="person"><img class="portrait" alt="Illustrerat platshållarporträtt" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 390'%3E%3Crect width='280' height='390' fill='%23dce8e8'/%3E%3Ccircle cx='140' cy='140' r='65' fill='%23d2a78e'/%3E%3Cpath d='M76 128q-3-95 64-95t65 95q-20-48-65-45t-64 45' fill='%235a4b45'/%3E%3Cpath d='M24 390v-55q5-100 116-100t116 100v55' fill='%23536b79'/%3E%3Ccircle cx='116' cy='144' r='4' fill='%233d3938'/%3E%3Ccircle cx='164' cy='144' r='4' fill='%233d3938'/%3E%3Cpath d='M126 184q14 9 28 0' stroke='%238c5b51' stroke-width='3' fill='none'/%3E%3C/svg%3E"><div class="age">16</div></div>
+<div class="details"><div class="person-name">Johannes Young</div><div class="number">100413-7459</div><div class="fake-banner">FAKE FAKE FAKE</div></div>
+</article>
+<div class="qr-wrap"><div class="qr-panel"><svg viewBox="0 0 200 200" aria-label="Dekorativ icke-skanningsbar QR-symbol"><rect width="200" height="200" fill="white"/><g stroke="#092127" stroke-width="7" fill="none"><rect x="12" y="12" width="43" height="43"/><rect x="145" y="12" width="43" height="43"/><rect x="12" y="145" width="43" height="43"/></g><g fill="#092127"><rect x="25" y="25" width="17" height="17"/><rect x="158" y="25" width="17" height="17"/><rect x="25" y="158" width="17" height="17"/><path d="M76 20h14v14H76zM105 20h16v16h-16zM76 50h20v15H76zM105 58h23v18h-23zM65 85h19v18H65zM116 85h20v19h-20zM150 80h23v16h-23zM20 82h27v16H20zM20 110h24v20H20zM57 116h23v16H57zM105 118h22v15h-22zM150 114h20v18h-20zM77 150h18v21H77zM106 160h20v20h-20zM148 153h30v19h-30z"/></g><rect x="55" y="80" width="90" height="44" rx="4" fill="white"/><text x="100" y="108" text-anchor="middle" font-size="23" font-weight="900" fill="#092127">FAKE</text></svg></div><div class="caption">Fiktiv QR-kod – endast demonstration</div><div class="footnote">Ej giltig som legitimation eller BankID</div></div>
+</div></section><div class="toast" id="toast" role="status"></div>
+<script>
+const overlay=document.getElementById('overlay'),toast=document.getElementById('toast');
+document.getElementById('openId').addEventListener('click',()=>{overlay.classList.add('open');overlay.scrollTop=0;document.body.style.overflow='hidden'});
+function closeCard(){overlay.classList.remove('open');document.body.style.overflow=''}
+document.getElementById('closeId').addEventListener('click',closeCard);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCard()});
+let toastTimer;function showToast(s){toast.textContent=s;toast.style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.style.display='none',2300)}
+document.getElementById('scan').addEventListener('click',()=>showToast('QR-skanning kommer senare'));
+document.getElementById('menu').addEventListener('click',()=>showToast('Meny kommer senare'));
+document.getElementById('more').addEventListener('click',()=>showToast('Bank-id'));
+const curves=document.getElementById('curveGroup');for(let i=0;i<42;i++){const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d',`M ${-230+i*9} ${200+i*11} C ${70+i*3} ${-120+i*12}, ${430+i*3} ${100+i*9}, ${520+i*4} ${660+i*3}`);curves.appendChild(p)}
+</script></body></html>
