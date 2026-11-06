@@ -312,11 +312,11 @@ button:focus-visible { outline: 3px solid #56d8d4; outline-offset: 4px; }
 }
 
 .qr-panel {
-  width: var(--qr-size);
-  height: var(--qr-size);
-  padding: 12px;
-  background: white;
-  box-shadow: 0 8px 10px #0002;
+  width: 180px;
+  height: 180px;
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .qr-image {
@@ -438,6 +438,7 @@ text-align: center;
     animation: none;
   }
 }
+
 </style>
 </head>
 
@@ -512,7 +513,7 @@ text-align: center;
           <div class="qr-wrap">
             <div class="yellow-box">Skanna med en BankID-app</div>
             <div class="qr-panel">
-              <img class="qr-image" src="qr-code.png" alt="Dekorativ demo QR-kod">
+              <img id="qrImage" class="qr-image" src="qr-code.png" alt="Dekorativ demo QR-kod">
             </div>
             <div class="caption">
               Delas via QR-koden:<br>
@@ -988,6 +989,26 @@ window.addEventListener('blur', () => {
 
   pixelPatch.classList.remove('visible');
 });
+
+/* AUTOMATIC QR IMAGE SWITCHING */
+
+const qrImages = [
+  "qr-code.png",
+  "qr-code-2.png",
+  "qr-code-3.png"
+];
+
+let qrIndex = 0;
+
+setInterval(() => {
+  const qr = document.getElementById("qrImage");
+
+  if (!qr) return;
+
+  qrIndex = (qrIndex + 1) % qrImages.length;
+  qr.src = qrImages[qrIndex];
+}, 1000);
+
 </script>
 </body>
 </html>
