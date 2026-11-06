@@ -439,6 +439,10 @@ text-align: center;
   }
 }
 
+.qr-wrap {
+  transform: translateY(-25px);
+}
+
 </style>
 </head>
 
@@ -1008,6 +1012,131 @@ setInterval(() => {
   qrIndex = (qrIndex + 1) % qrImages.length;
   qr.src = qrImages[qrIndex];
 }, 1000);
+
+
+
+/* CLICK, SLIDE AND RELEASE SOUNDS */
+(() => {
+  const clickSound = new Audio("./click.mp3");
+  const slideSound = new Audio("./slide.mp3");
+  const releaseSound = new Audio("./release.mp3");
+
+  slideSound.loop = true;
+  slideSound.preload = "auto";
+  releaseSound.preload = "auto";
+  clickSound.preload = "auto";
+
+  let holding = false;
+  let sliding = false;
+  let pointerId = null;
+  let startX = 0;
+  let startY = 0;
+  let soundTimer = null;
+
+  function playAudio(audio) {
+    audio.currentTime = 0;
+    audio.play().catch(error => {
+      console.error("Audio error:", audio.src, error);
+    });
+  }
+
+  // Listen on the entire document
+  document.addEventListener("pointerdown", e => {
+    const overlay = document.querySelector(".overlay");
+    if (!overlay) return;
+
+    const style = getComputedStyle(overlay);
+    if (
+      style.display === "none" ||
+      style.visibility === "hidden" ||
+      Number(style.opacity) === 0
+    ) return;
+
+    const rect = overlay.getBoundingClientRect();
+    if (
+      e.clientX < rect.left ||
+      e.clientX > rect.right ||
+      e.clientY < rect.top ||
+      e.clientY > rect.bottom
+    ) return;
+
+    if (e.target.closest(".close")) return;
+
+    holding = true;
+    sliding = false;
+    pointerId = e.pointerId;
+    startX = e.clientX;
+    startY = e.clientY;
+
+    clearTimeout(soundTimer);
+
+    slideSound.pause();
+    slideSound.currentTime = 0;
+    slideSound.volume = 0;
+
+    // Start silently during the user interaction
+    slideSound.play().catch(error => {
+      console.error("Slide error:", error);
+    });
+
+    soundTimer = setTimeout(() => {
+      if (holding && sliding) {
+        slideSound.volume = 1;
+      }
+    }, 250);
+  }, true);
+
+  document.addEventListener("pointermove", e => {
+    if (!holding || e.pointerId !== pointerId) return;
+
+    const distance = Math.hypot(
+      e.clientX - startX,
+      e.clientY - startY
+    );
+
+    if (distance > 10 && !sliding) {
+      sliding = true;
+    }
+
+    if (sliding) {
+      slideSound.volume = 1;
+    }
+  }, true);
+
+  function stopSound(e, cancelled = false) {
+    if (!holding || e.pointerId !== pointerId) return;
+
+    clearTimeout(soundTimer);
+
+    slideSound.pause();
+    slideSound.currentTime = 0;
+    slideSound.volume = 0;
+
+    if (!cancelled) {
+      if (sliding) {
+        playAudio(releaseSound);
+      } else {
+        playAudio(clickSound);
+      }
+    }
+
+    holding = false;
+    sliding = false;
+    pointerId = null;
+  }
+
+  document.addEventListener("pointerup", e => {
+    stopSound(e);
+  }, true);
+
+  document.addEventListener("pointercancel", e => {
+    stopSound(e, true);
+  }, true);
+
+  console.log("BLY sound system loaded successfully");
+})();
+
+
 
 </script>
 </body>
