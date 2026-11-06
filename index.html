@@ -15,7 +15,7 @@
   --phone-height: 844px;
   --phone-scale: 1;
   --qr-size: 155px;
-  --lens-size: 170px;
+  --lens-size: 125px;
 }
 
 * {
@@ -259,18 +259,20 @@ body {
   font-size: 33px;
 }
 
+/* SMALLER BLY LOGO */
+
 .demo-logo {
   position: absolute;
   top: 17px;
   left: 50%;
   transform: translateX(-50%);
-  width: 100px;
+  width: 82px;
   max-height: 60px;
   object-fit: contain;
   z-index: 4;
 }
 
-/* PORTRAIT — SLIGHTLY BIGGER */
+/* PORTRAIT */
 
 .person {
   position: absolute;
@@ -290,6 +292,8 @@ body {
   background: #e5eeee;
 }
 
+/* SMALLER AGE NUMBER */
+
 .age {
   position: absolute;
   right: -32px;
@@ -297,35 +301,39 @@ body {
   padding: 5px 3px 0 13px;
   border-radius: 6px 0 0 0;
   background: white;
-  font-size: 58px;
+  font-size: 47px;
   line-height: 1;
   font-weight: 500;
 }
 
-/* DETAILS */
+/* DETAILS — LOWER */
 
 .details {
   position: absolute;
-  top: 63%;
+  top: 65%;
   width: 100%;
   text-align: center;
   padding: 0 12px;
 }
 
-/* NAME — THINNER FONT */
+/* NAME — SLIGHTLY THICKER */
 
 .person-name {
   font-size: 34px;
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: -.035em;
+  line-height: 1.05;
   color: var(--ink);
 }
 
+/* FAKE NUMBER — CLOSER TO NAME */
+
 .number {
-  margin-top: 1px;
+  margin-top: 0;
   font-size: 19px;
   font-weight: 500;
   letter-spacing: .02em;
+  line-height: 1.1;
   color: #66757b;
 }
 
@@ -333,7 +341,7 @@ body {
 
 .demo-warning {
   position: absolute;
-  top: -70px;
+  top: -83px;
   left: 50%;
   transform: translateX(-50%);
   margin-top: 0;
@@ -347,7 +355,7 @@ body {
   z-index: 5;
 }
 
-/* QR PNG */
+/* QR CODE */
 
 .qr-wrap {
   position: relative;
@@ -413,7 +421,7 @@ body {
   text-align: center;
 }
 
-/* PIXEL MAGNIFIER */
+/* SMALLER PIXEL MAGNIFIER */
 
 #pixelLens {
   position: absolute;
@@ -426,18 +434,24 @@ body {
   pointer-events: none;
   z-index: 9999;
   border: 2px solid rgba(255,255,255,.7);
-  box-shadow: 0 8px 30px #0004;
+  box-shadow: 0 8px 24px #0004;
   opacity: 0;
-  transform: translate(-50%,-50%) scale(.15);
+  transform: translate(-50%, -50%) scale(.15);
   transition:
-    opacity .22s ease,
-    transform .3s cubic-bezier(.2,.8,.2,1);
+    opacity .65s ease,
+    transform .7s cubic-bezier(.22,1,.36,1);
   background: transparent;
+  will-change: transform, opacity, left, top;
 }
 
 #pixelLens.active {
   opacity: 1;
-  transform: translate(-50%,-50%) scale(1);
+  transform: translate(-50%, -50%) scale(1);
+}
+
+#pixelLens.releasing {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.08);
 }
 
 #pixelCanvas {
@@ -730,7 +744,7 @@ document.getElementById('more').addEventListener('click', () => {
   showToast('BLY Demo');
 });
 
-/* DYNAMIC WAVY AND STRAIGHT SECURITY LINES */
+/* ANIMATED SECURITY LINES */
 
 {
   const clockwise = document.getElementById('clockwiseLines');
@@ -829,26 +843,31 @@ document.getElementById('more').addEventListener('click', () => {
   requestAnimationFrame(updateSecurityLines);
 }
 
-/* LIVE PIXEL MAGNIFIER */
+/* SMOOTHER PIXEL MAGNIFIER */
 
 const lens = document.getElementById('pixelLens');
 const pixelCanvas = document.getElementById('pixelCanvas');
-const pixelCtx = pixelCanvas.getContext('2d');
+const pixelCtx = pixelCanvas.getContext('2d', {
+  alpha: true
+});
 
-const pixelSize = 28;
-const zoom = 2.4;
+const pixelSize = 16;
+const zoom = 2.5;
 
 let lensActive = false;
 let activePointerId = null;
 let pointerX = 0;
 let pointerY = 0;
+
 let snapshot = null;
-let captureInProgress = false;
-let captureTimer = null;
 let captureVersion = 0;
+let drawPending = false;
+let releaseTimer = null;
+
+/* LOW-RESOLUTION PIXEL CANVAS */
 
 function configureLens() {
-  const size = lens.offsetWidth || 170;
+  const size = lens.offsetWidth || 125;
 
   const resolution = Math.max(
     1,
@@ -863,10 +882,12 @@ function configureLens() {
     pixelCanvas.height = resolution;
   }
 
+  pixelCtx.imageSmoothingEnabled = false;
+
   return size;
 }
 
-/* CORRECT POSITION INSIDE SCALED IPHONE */
+/* HANDLE DESKTOP PHONE SCALING */
 
 function getLocalPosition(clientX, clientY) {
   const rect = phoneScreen.getBoundingClientRect();
@@ -879,13 +900,14 @@ function getLocalPosition(clientX, clientY) {
   };
 }
 
-/* DRAW MAGNIFIER */
+/* DRAW ONE FRAME */
 
-function updateLens(clientX, clientY) {
-  pointerX = clientX;
-  pointerY = clientY;
+function drawLens() {
+  drawPending = false;
 
-  const pos = getLocalPosition(clientX, clientY);
+  if (!lensActive) return;
+
+  const pos = getLocalPosition(pointerX, pointerY);
 
   lens.style.left = pos.x + 'px';
   lens.style.top = pos.y + 'px';
@@ -898,26 +920,31 @@ function updateLens(clientX, clientY) {
   const overlayRect = overlay.getBoundingClientRect();
 
   const overlayX =
-    (clientX - overlayRect.left) *
+    (pointerX - overlayRect.left) *
     (overlay.clientWidth / overlayRect.width);
 
   const overlayY =
-    (clientY - overlayRect.top) *
+    (pointerY - overlayRect.top) *
     (overlay.clientHeight / overlayRect.height);
 
-  const screenshotScaleX =
-    snapshot.width / overlay.clientWidth;
+  const scaleX = snapshot.width / overlay.clientWidth;
+  const scaleY = snapshot.height / overlay.clientHeight;
 
-  const screenshotScaleY =
-    snapshot.height / overlay.clientHeight;
+  const sourceX = Math.max(
+    0,
+    Math.min(
+      snapshot.width - sampleSize * scaleX,
+      (overlayX - sampleSize / 2) * scaleX
+    )
+  );
 
-  const sourceX =
-    (overlayX - sampleSize / 2) * screenshotScaleX;
-
-  const sourceY =
-    (overlayY - sampleSize / 2) * screenshotScaleY;
-
-  pixelCtx.imageSmoothingEnabled = false;
+  const sourceY = Math.max(
+    0,
+    Math.min(
+      snapshot.height - sampleSize * scaleY,
+      (overlayY - sampleSize / 2) * scaleY
+    )
+  );
 
   pixelCtx.clearRect(
     0, 0,
@@ -925,12 +952,14 @@ function updateLens(clientX, clientY) {
     pixelCanvas.height
   );
 
+  pixelCtx.imageSmoothingEnabled = false;
+
   pixelCtx.drawImage(
     snapshot,
     sourceX,
     sourceY,
-    sampleSize * screenshotScaleX,
-    sampleSize * screenshotScaleY,
+    sampleSize * scaleX,
+    sampleSize * scaleY,
     0,
     0,
     pixelCanvas.width,
@@ -938,48 +967,64 @@ function updateLens(clientX, clientY) {
   );
 }
 
-/* CAPTURE EVERYTHING INCLUDING PNG IMAGES */
+/* CAPTURE ONCE, INCLUDING SECURITY LINES */
 
-async function captureScreen(version) {
-  if (!lensActive || captureInProgress) return;
-
+async function captureLens(version) {
   if (typeof html2canvas !== 'function') {
-    console.error('html2canvas is unavailable');
+    console.error('html2canvas unavailable');
     return;
   }
-
-  captureInProgress = true;
 
   try {
     const canvas = await html2canvas(overlay, {
       backgroundColor: null,
-      scale: Math.min(window.devicePixelRatio || 1, 2),
+      scale: 1,
       useCORS: true,
       allowTaint: false,
       logging: false,
       width: overlay.clientWidth,
       height: overlay.clientHeight,
       scrollX: 0,
-      scrollY: 0
+      scrollY: 0,
+      onclone: clonedDocument => {
+        const clonedOverlay =
+          clonedDocument.getElementById('overlay');
+
+        if (clonedOverlay) {
+          clonedOverlay.style.display = 'block';
+        }
+      }
     });
 
-    if (lensActive && version === captureVersion) {
-      snapshot = canvas;
-      updateLens(pointerX, pointerY);
+    if (version !== captureVersion || !lensActive) {
+      return;
     }
+
+    snapshot = canvas;
+    requestLensDraw();
 
   } catch (error) {
     console.error('Magnifier capture failed:', error);
-  } finally {
-    captureInProgress = false;
   }
 }
 
-/* START MAGNIFIER */
+/* DRAW AT MOST ONCE PER FRAME */
 
-overlay.addEventListener('pointerdown', async e => {
+function requestLensDraw() {
+  if (drawPending) return;
+
+  drawPending = true;
+  requestAnimationFrame(drawLens);
+}
+
+/* START */
+
+overlay.addEventListener('pointerdown', e => {
   if (e.target.closest('button')) return;
-  if (lensActive) return;
+
+  clearTimeout(releaseTimer);
+
+  lens.classList.remove('active', 'releasing');
 
   lensActive = true;
   activePointerId = e.pointerId;
@@ -996,40 +1041,49 @@ overlay.addEventListener('pointerdown', async e => {
   } catch (error) {}
 
   configureLens();
-  updateLens(e.clientX, e.clientY);
+  requestLensDraw();
 
-  lens.classList.add('active');
+  requestAnimationFrame(() => {
+    if (lensActive) {
+      lens.classList.add('active');
+    }
+  });
 
-  await captureScreen(version);
-
-  if (!lensActive || version !== captureVersion) return;
-
-  captureTimer = setInterval(() => {
-    captureScreen(version);
-  }, 180);
+  captureLens(version);
 });
 
-/* MOVE MAGNIFIER */
+/* MOVE */
 
 overlay.addEventListener('pointermove', e => {
   if (!lensActive) return;
   if (e.pointerId !== activePointerId) return;
 
-  updateLens(e.clientX, e.clientY);
+  pointerX = e.clientX;
+  pointerY = e.clientY;
+
+  requestLensDraw();
 });
 
-/* STOP MAGNIFIER */
+/* SLOW ZOOM-OUT ON RELEASE */
 
 function releaseLens() {
+  if (!lensActive) return;
+
   lensActive = false;
   activePointerId = null;
   captureVersion++;
 
-  clearInterval(captureTimer);
-  captureTimer = null;
-
   lens.classList.remove('active');
-  snapshot = null;
+  lens.classList.add('releasing');
+
+  clearTimeout(releaseTimer);
+
+  releaseTimer = setTimeout(() => {
+    if (!lensActive) {
+      lens.classList.remove('releasing');
+      snapshot = null;
+    }
+  }, 750);
 }
 
 overlay.addEventListener('pointerup', releaseLens);
@@ -1038,7 +1092,7 @@ window.addEventListener('blur', releaseLens);
 
 window.addEventListener('resize', () => {
   if (lensActive) {
-    updateLens(pointerX, pointerY);
+    requestLensDraw();
   }
 });
 
