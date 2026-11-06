@@ -230,11 +230,11 @@ button:focus-visible { outline: 3px solid #56d8d4; outline-offset: 4px; }
 .person {
   position: absolute;
   z-index: 2;
-  top: 20%;
+  top: 10%;
   left: 50%;
   transform: translateX(-50%);
-  width: 58%;
-  max-width: 255px;
+  width: 70%;
+  max-width: 280px;
   background: transparent !important;
 }
 
@@ -328,19 +328,19 @@ button:focus-visible { outline: 3px solid #56d8d4; outline-offset: 4px; }
 
 .yellow-box {
   position: absolute;
-  top: -45px;
+  top: -53px;
   left: 50%;
   transform: translateX(-50%);
-  width: 195px;
-  height: 28px;
+  width: 235px;
+  height: 38px;
   background: #fff0df;
-  border-radius: 4px;
+  border-radius: 5px;
   z-index: 3;
   display: flex;
 align-items: center;
 justify-content: center;
 color: #092127;
-font-size: 14px;
+font-size: 16px;
 font-weight: 600;
 text-align: center;
 }
@@ -516,10 +516,7 @@ text-align: center;
             </div>
             <div class="caption">
               Delas via QR-koden:<br>
-              Fiktiv demo – inga personuppgifter
-            </div>
-            <div class="footnote">
-              BLY DEMO · Ej giltig som legitimation
+              Foto, namn och personnummer
             </div>
           </div>
         </div>
@@ -623,7 +620,7 @@ document.getElementById('more').addEventListener('click', () => {
     );
 
     const points = [];
-    const baseRadius = 100 + index * 8;
+    const baseRadius = 25 + index * 20;
 
     for (let j = 0; j <= 240; j++) {
       const angle = (j / 240) * Math.PI * 2;
@@ -667,7 +664,7 @@ document.getElementById('more').addEventListener('click', () => {
     group.appendChild(path);
   }
 
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < 32; i++) {
     addLine(clockwise, i, false);
     addLine(counterclockwise, i, true);
   }
