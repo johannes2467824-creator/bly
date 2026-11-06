@@ -239,7 +239,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 13px 18px;
+  padding: 7px 10px;
 }
 
 .close,
@@ -251,8 +251,13 @@ body {
   line-height: 1;
 }
 
-.close { font-size: 44px; }
-.dots { font-size: 33px; }
+.close {
+  font-size: 30px;
+}
+
+.dots {
+  font-size: 33px;
+}
 
 .demo-logo {
   position: absolute;
@@ -265,15 +270,15 @@ body {
   z-index: 4;
 }
 
-/* PORTRAIT */
+/* PORTRAIT — SLIGHTLY BIGGER */
 
 .person {
   position: absolute;
   top: 20%;
   left: 50%;
   transform: translateX(-50%);
-  width: 55%;
-  max-width: 245px;
+  width: 58%;
+  max-width: 255px;
 }
 
 .portrait {
@@ -301,44 +306,53 @@ body {
 
 .details {
   position: absolute;
-  top: 61.5%;
+  top: 63%;
   width: 100%;
   text-align: center;
   padding: 0 12px;
 }
 
+/* NAME — THINNER FONT */
+
 .person-name {
   font-size: 34px;
-  font-weight: 650;
+  font-weight: 400;
   letter-spacing: -.035em;
   color: var(--ink);
 }
 
 .number {
-  margin-top: 5px;
+  margin-top: 1px;
   font-size: 19px;
   font-weight: 500;
   letter-spacing: .02em;
   color: #66757b;
 }
 
+/* WARNING OVER PORTRAIT */
+
 .demo-warning {
-  display: inline-block;
-  margin-top: 12px;
+  position: absolute;
+  top: -70px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0;
   background: #fff0df;
   padding: 7px 10px;
   border-radius: 5px;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: .06em;
+  white-space: nowrap;
+  z-index: 5;
 }
 
-/* QR PNG — MOVED 10 PX FURTHER UP */
+/* QR PNG */
 
 .qr-wrap {
   position: relative;
   z-index: 2;
-  margin-top: -75px;
+  margin-top: -78px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -363,7 +377,7 @@ body {
 
 .yellow-box {
   position: absolute;
-  top: -38px;
+  top: -45px;
   left: 50%;
   transform: translateX(-50%);
   width: 195px;
