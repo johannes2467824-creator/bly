@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#092127">
-<title>BLY – iPhone 14 Preview</title>
+<title>BLY – Demo</title>
 
 <style>
 :root {
@@ -15,6 +15,7 @@
   --phone-height: 844px;
   --phone-scale: 1;
   --qr-size: 170px;
+  --lens-size: 170px;
 }
 
 * {
@@ -27,7 +28,8 @@ html, body {
   height: 100%;
   overflow: hidden;
   overscroll-behavior: none;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Arial, sans-serif;
   color: white;
 }
 
@@ -41,12 +43,11 @@ button:focus-visible {
   outline-offset: 4px;
 }
 
-/* DESKTOP PREVIEW */
-
 body {
   background: #101820;
-  overflow: hidden;
 }
+
+/* IPHONE PREVIEW */
 
 .preview-stage {
   position: fixed;
@@ -66,9 +67,13 @@ body {
   border-radius: 48px;
   border: 7px solid #05090c;
   background: var(--bg);
-  box-shadow: 0 0 0 2px #56636b, 0 20px 80px #0009;
+  box-shadow:
+    0 0 0 2px #56636b,
+    0 20px 80px #0009;
   isolation: isolate;
-  transform: translate(-50%, -50%) scale(var(--phone-scale));
+  transform:
+    translate(-50%, -50%)
+    scale(var(--phone-scale));
   transform-origin: center center;
 }
 
@@ -81,7 +86,7 @@ body {
   background: var(--bg);
 }
 
-/* HOME SCREEN */
+/* HOME */
 
 .home {
   height: 100%;
@@ -145,7 +150,7 @@ body {
   stroke-linejoin: round;
 }
 
-/* ID OVERLAY */
+/* ID SCREEN */
 
 .overlay {
   position: absolute;
@@ -156,8 +161,17 @@ body {
   overscroll-behavior: none;
   touch-action: none;
   background:
-    radial-gradient(ellipse at 12% 66%, #5fbd93 0%, transparent 55%),
-    linear-gradient(120deg, #193d4e, #1b4751 60%, #193d4e);
+    radial-gradient(
+      ellipse at 12% 66%,
+      #5fbd93 0%,
+      transparent 55%
+    ),
+    linear-gradient(
+      120deg,
+      #193d4e,
+      #1b4751 60%,
+      #193d4e
+    );
 }
 
 .overlay.open {
@@ -165,6 +179,7 @@ body {
 }
 
 .id-layout {
+  position: relative;
   width: 100%;
   height: 100%;
   padding: 26px 9px 0;
@@ -177,7 +192,7 @@ body {
   position: relative;
   width: 100%;
   height: 650px;
-  min-height: 650px;
+  flex: none;
   border-radius: 18px;
   background: white;
   color: var(--ink);
@@ -185,7 +200,7 @@ body {
   isolation: isolate;
 }
 
-/* ANIMATED PASTEL LINES */
+/* SECURITY LINES */
 
 .lines {
   position: absolute;
@@ -196,24 +211,24 @@ body {
   pointer-events: none;
 }
 
-@keyframes blyRotate {
-  0% {
-    transform: rotate(0deg) scale(1);
-  }
-
-  50% {
-    transform: rotate(180deg) scale(1.035);
-  }
-
-  100% {
-    transform: rotate(360deg) scale(1);
-  }
+.bly-lines-clockwise {
+  transform-origin: 50% 50%;
+  animation: rotateClockwise 38s linear infinite;
 }
 
-.bly-security-lines {
-  animation: blyRotate 38s linear infinite;
-  transform-box: view-box;
-  transform-origin: 210px 380px;
+.bly-lines-counterclockwise {
+  transform-origin: 50% 50%;
+  animation: rotateCounterclockwise 47s linear infinite;
+}
+
+@keyframes rotateClockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rotateCounterclockwise {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
 }
 
 /* HEADER */
@@ -227,7 +242,8 @@ body {
   padding: 13px 18px;
 }
 
-.close, .dots {
+.close,
+.dots {
   border: 0;
   background: none;
   color: var(--ink);
@@ -235,13 +251,8 @@ body {
   line-height: 1;
 }
 
-.close {
-  font-size: 44px;
-}
-
-.dots {
-  font-size: 33px;
-}
+.close { font-size: 44px; }
+.dots { font-size: 33px; }
 
 .demo-logo {
   position: absolute;
@@ -313,16 +324,16 @@ body {
 
 .demo-warning {
   display: inline-block;
-  margin-top: 24px;
+  margin-top: 12px;
   background: #fff0df;
-  padding: 10px 14px;
+  padding: 7px 10px;
   border-radius: 5px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
-  letter-spacing: .08em;
+  letter-spacing: .06em;
 }
 
-/* QR PANEL */
+/* QR PNG */
 
 .qr-wrap {
   position: relative;
@@ -341,22 +352,23 @@ body {
   box-shadow: 0 8px 10px #0002;
 }
 
-.qr-panel svg {
+.qr-image {
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: contain;
 }
 
-/* YELLOW BOX */
+/* PALE YELLOW BOX */
 
 .yellow-box {
   position: absolute;
-  top: -48px;
+  top: -38px;
   left: 50%;
   transform: translateX(-50%);
   width: 195px;
-  height: 30px;
-  background: #ffe68a;
+  height: 28px;
+  background: #fff0c4;
   border-radius: 4px;
   z-index: 3;
 }
@@ -369,7 +381,7 @@ body {
   transform: translateX(-50%);
   border-left: 11px solid transparent;
   border-right: 11px solid transparent;
-  border-top: 11px solid #ffe68a;
+  border-top: 11px solid #fff0c4;
 }
 
 .caption {
@@ -393,8 +405,8 @@ body {
   position: absolute;
   left: 0;
   top: 0;
-  width: 270px;
-  height: 270px;
+  width: var(--lens-size);
+  height: var(--lens-size);
   border-radius: 50%;
   overflow: hidden;
   pointer-events: none;
@@ -405,7 +417,7 @@ body {
   transform: translate(-50%,-50%) scale(.15);
   transition:
     opacity .22s ease,
-    transform .4s cubic-bezier(.2,.8,.2,1);
+    transform .3s cubic-bezier(.2,.8,.2,1);
   background: transparent;
 }
 
@@ -436,7 +448,7 @@ body {
   white-space: nowrap;
 }
 
-/* REAL MOBILE */
+/* MOBILE */
 
 @media (max-width: 600px) {
   body {
@@ -465,13 +477,18 @@ body {
     border-radius: 0;
   }
 
+  .id-layout {
+    padding-top: 12px;
+  }
+
   .identity {
-    height: clamp(650px,77svh,790px);
+    height: min(650px, 77svh);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bly-security-lines {
+  .bly-lines-clockwise,
+  .bly-lines-counterclockwise {
     animation: none;
   }
 
@@ -499,7 +516,8 @@ body {
           <button id="openId" aria-label="Visa BLY">
             <svg viewBox="0 0 32 32">
               <rect x="5" y="2" width="22" height="28" rx="1"/>
-              <circle cx="16" cy="11" r="3" fill="currentColor" stroke="none"/>
+              <circle cx="16" cy="11" r="3"
+                fill="currentColor" stroke="none"/>
               <path d="M10 20c0-6 12-6 12 0M11 25h10"/>
             </svg>
             <span>BLY</span>
@@ -523,69 +541,79 @@ body {
         </nav>
       </main>
 
-      <!-- ID OVERLAY -->
+      <!-- ID CARD -->
 
       <section class="overlay" id="overlay"
-        role="dialog" aria-modal="true" aria-label="BLY demo">
+        role="dialog"
+        aria-modal="true"
+        aria-label="BLY demo">
 
         <div class="id-layout">
 
           <article class="identity">
 
-            <svg class="lines" viewBox="0 0 420 760"
-              preserveAspectRatio="none" aria-hidden="true">
-              <g id="curveGroup" class="bly-security-lines" fill="none"></g>
+            <svg class="lines"
+              viewBox="0 0 420 760"
+              preserveAspectRatio="none"
+              aria-hidden="true">
+
+              <g id="clockwiseLines"
+                class="bly-lines-clockwise"
+                fill="none"></g>
+
+              <g id="counterclockwiseLines"
+                class="bly-lines-counterclockwise"
+                fill="none"></g>
+
             </svg>
 
             <header class="id-top">
-              <button class="close" id="closeId" aria-label="Stäng">×</button>
-              <button class="dots" id="more" aria-label="Fler alternativ">⋮</button>
+              <button class="close" id="closeId"
+                aria-label="Stäng">×</button>
+
+              <button class="dots" id="more"
+                aria-label="Fler alternativ">⋮</button>
             </header>
 
-            <img class="demo-logo" src="bly-logo.png" alt="BLY Demo">
+            <img class="demo-logo"
+              src="bly-logo.png"
+              alt="BLY Demo">
 
             <div class="person">
-              <img class="portrait" src="portrait.png" alt="BLY demo portrait">
+              <img class="portrait"
+                src="portrait.png"
+                alt="BLY demo portrait">
               <div class="age">16</div>
             </div>
 
             <div class="details">
-              <div class="person-name">Johannes Young</div>
-              <div class="number">FAKEFA-FAKE</div>
-              <div class="demo-warning">EJ GILTIG LEGITIMATION</div>
+              <div class="person-name">
+                Johannes Young
+              </div>
+
+              <div class="number">
+                FAKEFA-FAKE
+              </div>
+
+              <div class="demo-warning">
+                EJ GILTIG LEGITIMATION
+              </div>
             </div>
 
           </article>
 
+          <!-- QR IMAGE -->
+
           <div class="qr-wrap">
-            <div class="yellow-box" aria-hidden="true"></div>
+
+            <div class="yellow-box"
+              aria-hidden="true"></div>
 
             <div class="qr-panel">
-              <svg viewBox="0 0 200 200"
-                aria-label="Dekorativ icke-skanningsbar QR-symbol">
-
-                <rect width="200" height="200" fill="white"/>
-
-                <g stroke="#092127" stroke-width="7" fill="none">
-                  <rect x="12" y="12" width="43" height="43"/>
-                  <rect x="145" y="12" width="43" height="43"/>
-                  <rect x="12" y="145" width="43" height="43"/>
-                </g>
-
-                <g fill="#092127">
-                  <rect x="25" y="25" width="17" height="17"/>
-                  <rect x="158" y="25" width="17" height="17"/>
-                  <rect x="25" y="158" width="17" height="17"/>
-                  <path d="M76 20h14v14H76zM105 20h16v16h-16zM76 50h20v15H76zM105 58h23v18h-23zM65 85h19v18H65zM116 85h20v19h-20zM150 80h23v16h-23zM20 82h27v16H20zM20 110h24v20H20zM57 116h23v16H57zM105 118h22v15h-22zM150 114h20v18h-20zM77 150h18v21H77zM106 160h20v20h-20zM148 153h30v19h-30z"/>
-                </g>
-
-                <rect x="55" y="80" width="90" height="44"
-                  rx="4" fill="white"/>
-
-                <text x="100" y="108" text-anchor="middle"
-                  font-size="23" font-weight="900"
-                  fill="#092127">FAKE</text>
-              </svg>
+              <img
+                class="qr-image"
+                src="qr-code.png"
+                alt="Dekorativ QR-bild för demo">
             </div>
 
             <div class="caption">
@@ -596,12 +624,12 @@ body {
             <div class="footnote">
               BLY DEMO · Ej giltig som legitimation
             </div>
-          </div>
 
+          </div>
         </div>
       </section>
 
-      <!-- MAGNIFIER -->
+      <!-- PIXEL MAGNIFIER -->
 
       <div id="pixelLens" aria-hidden="true">
         <canvas id="pixelCanvas"></canvas>
@@ -616,7 +644,7 @@ body {
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <script>
-/* AUTO-FIT IPHONE PREVIEW */
+/* IPHONE AUTO FIT */
 
 function fitPhoneToScreen() {
   const phone = document.getElementById('phone');
@@ -634,7 +662,10 @@ function fitPhoneToScreen() {
     1
   );
 
-  phone.style.setProperty('--phone-scale', Math.max(0.1, scale));
+  phone.style.setProperty(
+    '--phone-scale',
+    Math.max(0.1, scale)
+  );
 }
 
 window.addEventListener('resize', fitPhoneToScreen);
@@ -685,128 +716,252 @@ document.getElementById('more').addEventListener('click', () => {
   showToast('BLY Demo');
 });
 
-/* PASTEL CIRCLES */
+/* DYNAMIC WAVY AND STRAIGHT SECURITY LINES */
 
 {
-  const curveGroup = document.getElementById('curveGroup');
-  const colors = ['#e5a4ce','#a4d7e1','#b4b5df','#b6d4d0'];
+  const clockwise = document.getElementById('clockwiseLines');
+  const counterclockwise = document.getElementById('counterclockwiseLines');
 
-  for (let i = 0; i < 30; i++) {
+  const colors = [
+    '#e5a4ce',
+    '#a4d7e1',
+    '#b4b5df',
+    '#b6d4d0'
+  ];
+
+  const lineGroups = [];
+
+  function createSecurityLine(group, index, reverse) {
     const path = document.createElementNS(
-      'http://www.w3.org/2000/svg', 'path'
+      'http://www.w3.org/2000/svg',
+      'path'
     );
 
-    const radius =
-      115 + Math.floor(i / 5) * 35 + (i % 5) * 2.5;
+    path.setAttribute('fill', 'none');
+    path.setAttribute(
+      'stroke',
+      colors[(index + (reverse ? 2 : 0)) % colors.length]
+    );
+    path.setAttribute('stroke-width', '0.85');
+    path.setAttribute('opacity', reverse ? '0.5' : '0.65');
 
-    const points = [];
+    group.appendChild(path);
 
-    for (let j = 0; j <= 240; j++) {
-      const angle = (j / 240) * Math.PI * 2;
+    return {
+      path,
+      index,
+      reverse,
+      phase: reverse ? 1.8 : 0.3,
+      straightness: index % 4 === 0 ? 0.65 : 0
+    };
+  }
 
-      const distortion =
-        Math.sin(angle * 3 + i * 0.025) * 11 +
-        Math.cos(angle * 5 - i * 0.015) * 6;
+  for (let i = 0; i < 26; i++) {
+    lineGroups.push(createSecurityLine(clockwise, i, false));
+    lineGroups.push(createSecurityLine(counterclockwise, i, true));
+  }
 
-      const r = radius + distortion;
-      const x = 210 + Math.cos(angle) * r * 1.45;
-      const y = 380 + Math.sin(angle) * r * 1.65;
+  function updateSecurityLines(time) {
+    const t = time * 0.001;
 
-      points.push(
-        `${j === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`
-      );
+    for (const line of lineGroups) {
+      const { index, phase, straightness, path } = line;
+
+      const points = [];
+      const steps = 360;
+      const baseRadius = 100 + index * 8;
+
+      const spacingMovement =
+        Math.sin(t * 0.55 + index * 0.42 + phase) * 9 +
+        Math.sin(t * 0.27 - index * 0.21) * 5;
+
+      for (let j = 0; j <= steps; j++) {
+        const angle = (j / steps) * Math.PI * 2;
+
+        const distortion =
+          Math.sin(angle * 3 + phase + index * 0.025) * 15 +
+          Math.cos(angle * 5 - phase - index * 0.015) * 9 +
+          Math.sin(angle * 7 + index * 0.03) * 4;
+
+        const straightWave =
+          Math.sin(angle * 4 + phase);
+
+        const straightFactor =
+          straightness *
+          Math.pow(Math.abs(straightWave), 6);
+
+        const finalDistortion =
+          distortion * (1 - straightFactor);
+
+        const r =
+          baseRadius +
+          spacingMovement +
+          finalDistortion;
+
+        const x = 210 + Math.cos(angle) * r * 1.25;
+        const y = 380 + Math.sin(angle) * r * 1.55;
+
+        points.push(
+          `${j === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`
+        );
+      }
+
+      path.setAttribute('d', points.join(' ') + ' Z');
     }
 
-    path.setAttribute('d', points.join(' ') + ' Z');
-    path.setAttribute('fill', 'none');
-    path.setAttribute('stroke', colors[i % colors.length]);
-    path.setAttribute('stroke-width', '0.9');
-    path.setAttribute('opacity', '0.65');
-
-    curveGroup.appendChild(path);
+    requestAnimationFrame(updateSecurityLines);
   }
+
+  requestAnimationFrame(updateSecurityLines);
 }
 
-/* PIXEL MAGNIFIER */
+/* LIVE PIXEL MAGNIFIER */
 
 const lens = document.getElementById('pixelLens');
 const pixelCanvas = document.getElementById('pixelCanvas');
 const pixelCtx = pixelCanvas.getContext('2d');
 
-const pixelSize = 12;
+const pixelSize = 28;
 const zoom = 2.4;
 
-let snapshot = null;
 let lensActive = false;
 let activePointerId = null;
 let pointerX = 0;
 let pointerY = 0;
+let snapshot = null;
+let captureInProgress = false;
+let captureTimer = null;
 let captureVersion = 0;
 
 function configureLens() {
-  const size = lens.offsetWidth || 270;
-  const width = Math.round(size / pixelSize);
+  const size = lens.offsetWidth || 170;
 
-  if (pixelCanvas.width !== width || pixelCanvas.height !== width) {
-    pixelCanvas.width = width;
-    pixelCanvas.height = width;
+  const resolution = Math.max(
+    1,
+    Math.round(size / pixelSize)
+  );
+
+  if (
+    pixelCanvas.width !== resolution ||
+    pixelCanvas.height !== resolution
+  ) {
+    pixelCanvas.width = resolution;
+    pixelCanvas.height = resolution;
   }
 
   return size;
 }
 
-function updateLens(x, y) {
-  const screenRect = phoneScreen.getBoundingClientRect();
+/* CORRECT POSITION INSIDE SCALED IPHONE */
 
-  pointerX = x;
-  pointerY = y;
+function getLocalPosition(clientX, clientY) {
+  const rect = phoneScreen.getBoundingClientRect();
 
-  const scale = screenRect.width / phoneScreen.offsetWidth || 1;
-  const localX = (x - screenRect.left) / scale;
-  const localY = (y - screenRect.top) / scale;
+  return {
+    x: (clientX - rect.left) *
+      (phoneScreen.offsetWidth / rect.width),
+    y: (clientY - rect.top) *
+      (phoneScreen.offsetHeight / rect.height)
+  };
+}
 
-  lens.style.left = localX + 'px';
-  lens.style.top = localY + 'px';
+/* DRAW MAGNIFIER */
+
+function updateLens(clientX, clientY) {
+  pointerX = clientX;
+  pointerY = clientY;
+
+  const pos = getLocalPosition(clientX, clientY);
+
+  lens.style.left = pos.x + 'px';
+  lens.style.top = pos.y + 'px';
 
   if (!snapshot) return;
 
   const size = configureLens();
   const sampleSize = size / zoom;
 
-  const scaleX = snapshot.width / overlay.clientWidth;
-  const scaleY = snapshot.height / overlay.clientHeight;
+  const overlayRect = overlay.getBoundingClientRect();
 
-  const sx = (localX - sampleSize / 2) * scaleX;
-  const sy = (localY - sampleSize / 2) * scaleY;
+  const overlayX =
+    (clientX - overlayRect.left) *
+    (overlay.clientWidth / overlayRect.width);
+
+  const overlayY =
+    (clientY - overlayRect.top) *
+    (overlay.clientHeight / overlayRect.height);
+
+  const screenshotScaleX =
+    snapshot.width / overlay.clientWidth;
+
+  const screenshotScaleY =
+    snapshot.height / overlay.clientHeight;
+
+  const sourceX =
+    (overlayX - sampleSize / 2) * screenshotScaleX;
+
+  const sourceY =
+    (overlayY - sampleSize / 2) * screenshotScaleY;
 
   pixelCtx.imageSmoothingEnabled = false;
-  pixelCtx.clearRect(0, 0, pixelCanvas.width, pixelCanvas.height);
+
+  pixelCtx.clearRect(
+    0, 0,
+    pixelCanvas.width,
+    pixelCanvas.height
+  );
 
   pixelCtx.drawImage(
     snapshot,
-    sx, sy,
-    sampleSize * scaleX,
-    sampleSize * scaleY,
-    0, 0,
+    sourceX,
+    sourceY,
+    sampleSize * screenshotScaleX,
+    sampleSize * screenshotScaleY,
+    0,
+    0,
     pixelCanvas.width,
     pixelCanvas.height
   );
 }
 
-async function captureScreen() {
+/* CAPTURE EVERYTHING INCLUDING PNG IMAGES */
+
+async function captureScreen(version) {
+  if (!lensActive || captureInProgress) return;
+
   if (typeof html2canvas !== 'function') {
-    throw new Error('html2canvas is not available');
+    console.error('html2canvas is unavailable');
+    return;
   }
 
-  return html2canvas(overlay, {
-    backgroundColor: null,
-    scale: window.devicePixelRatio || 1,
-    useCORS: true,
-    logging: false,
-    width: overlay.clientWidth,
-    height: overlay.clientHeight
-  });
+  captureInProgress = true;
+
+  try {
+    const canvas = await html2canvas(overlay, {
+      backgroundColor: null,
+      scale: Math.min(window.devicePixelRatio || 1, 2),
+      useCORS: true,
+      allowTaint: false,
+      logging: false,
+      width: overlay.clientWidth,
+      height: overlay.clientHeight,
+      scrollX: 0,
+      scrollY: 0
+    });
+
+    if (lensActive && version === captureVersion) {
+      snapshot = canvas;
+      updateLens(pointerX, pointerY);
+    }
+
+  } catch (error) {
+    console.error('Magnifier capture failed:', error);
+  } finally {
+    captureInProgress = false;
+  }
 }
+
+/* START MAGNIFIER */
 
 overlay.addEventListener('pointerdown', async e => {
   if (e.target.closest('button')) return;
@@ -814,6 +969,10 @@ overlay.addEventListener('pointerdown', async e => {
 
   lensActive = true;
   activePointerId = e.pointerId;
+
+  pointerX = e.clientX;
+  pointerY = e.clientY;
+
   snapshot = null;
 
   const version = ++captureVersion;
@@ -822,31 +981,41 @@ overlay.addEventListener('pointerdown', async e => {
     overlay.setPointerCapture(e.pointerId);
   } catch (error) {}
 
+  configureLens();
   updateLens(e.clientX, e.clientY);
+
   lens.classList.add('active');
 
-  try {
-    const captured = await captureScreen();
+  await captureScreen(version);
 
-    if (!lensActive || version !== captureVersion) return;
+  if (!lensActive || version !== captureVersion) return;
 
-    snapshot = captured;
-    updateLens(pointerX, pointerY);
-  } catch (error) {
-    console.error('Magnifier capture failed:', error);
-  }
+  captureTimer = setInterval(() => {
+    captureScreen(version);
+  }, 180);
 });
+
+/* MOVE MAGNIFIER */
 
 overlay.addEventListener('pointermove', e => {
-  if (!lensActive || e.pointerId !== activePointerId) return;
+  if (!lensActive) return;
+  if (e.pointerId !== activePointerId) return;
+
   updateLens(e.clientX, e.clientY);
 });
+
+/* STOP MAGNIFIER */
 
 function releaseLens() {
   lensActive = false;
   activePointerId = null;
   captureVersion++;
+
+  clearInterval(captureTimer);
+  captureTimer = null;
+
   lens.classList.remove('active');
+  snapshot = null;
 }
 
 overlay.addEventListener('pointerup', releaseLens);
@@ -854,10 +1023,12 @@ overlay.addEventListener('pointercancel', releaseLens);
 window.addEventListener('blur', releaseLens);
 
 window.addEventListener('resize', () => {
-  if (lensActive) updateLens(pointerX, pointerY);
+  if (lensActive) {
+    updateLens(pointerX, pointerY);
+  }
 });
 
-/* DISABLE WHEEL SCROLLING INSIDE PREVIEW */
+/* DISABLE SCROLLING */
 
 document.querySelector('.preview-stage').addEventListener(
   'wheel',
